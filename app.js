@@ -87,9 +87,12 @@ function updateStatus(message) {
     statusDiv.textContent = message;
 }
 
-// Registro del Service Worker
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-        .then(reg => console.log('Service Worker registrado', reg))
-        .catch(err => console.log('Error al registrar Service Worker', err));
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('./service-worker.js').then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    });
 }
