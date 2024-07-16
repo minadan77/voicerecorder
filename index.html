@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grabadora de Voz PWA</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="container">
+        <h1>Grabadora de Voz</h1>
+        <button id="recordButton" aria-label="Iniciar grabación">🎙️ Grabar</button>
+        <button id="stopButton" aria-label="Detener grabación" disabled>⏹️ Detener</button>
+        <button id="saveButton" aria-label="Guardar grabación" disabled>💾 Guardar</button>
+        <div id="status" aria-live="polite"></div>
+        <div id="recordings" aria-label="Lista de grabaciones"></div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
