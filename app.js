@@ -14,21 +14,36 @@ saveButton.addEventListener('click', saveRecording);
 
 async function startRecording() {
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
+        const stream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+                echoCancellation: false,
+                noiseSuppression: false,
+                autoGainControl: false,
+                channelCount: 1,
+                sampleRate: 44100,
+                sampleSize: 16
+            }
+        });
+
+        const options = {
+            mimeType: 'audio/webm;codecs=opus',
+            audioBitsPerSecond: 128000
+        };
+
+        mediaRecorder = new MediaRecorder(stream, options);
         
         mediaRecorder.ondataavailable = (event) => {
             audioChunks.push(event.data);
         };
 
         mediaRecorder.onstop = () => {
-            recordingBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            recordingBlob = new Blob(audioChunks, { type: 'audio/webm' });
             saveButton.disabled = false;
             updateStatus('Grabación finalizada. Puedes guardarla ahora.');
         };
 
         audioChunks = [];
-        mediaRecorder.start();
+        mediaRecorder.start(10); // Captura datos cada 10ms para mayor sensibilidad
         updateStatus('Grabando...');
         recordButton.disabled = true;
         stopButton.disabled = false;
@@ -53,7 +68,7 @@ function saveRecording() {
         return;
     }
 
-    const fileName = `grabacion_${new Date().toISOString().replace(/[:.]/g, '-')}.wav`;
+    const fileName = `grabacion_${new Date().toISOString().replace(/[:.]/g, '-')}.webm`;
     const url = URL.createObjectURL(recordingBlob);
     const a = document.createElement('a');
     a.style.display = 'none';
